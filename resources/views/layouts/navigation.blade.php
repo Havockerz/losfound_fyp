@@ -28,7 +28,21 @@
     <x-nav-link :href="route('report.founditem')" :active="request()->routeIs('report.founditem')">
         {{ __('Found Item') }}
     </x-nav-link>
-</div>            </div>
+</div>
+
+@if(auth()->user()->role === 'admin')
+    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+        <x-nav-link :href="route('admin.usermanagement')" :active="request()->routeIs('admin.usermanagement')">
+            {{ __('User Management') }}
+        </x-nav-link>
+    </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+        <x-nav-link :href="route('admin.postmanagement')" :active="request()->routeIs('admin.postmanagement')">
+            {{ __('Post Management') }}
+        </x-nav-link>
+    </div>
+@endif
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

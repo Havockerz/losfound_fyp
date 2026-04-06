@@ -65,11 +65,20 @@
                     </div>
 
                     <div class="flex items-center justify-between">
-                        <a href="javascript:history.back()" class="text-sm text-gray-600 hover:underline">Cancel</a>
-                        <x-primary-button>
-                            {{ __('Update Report') }}
-                        </x-primary-button>
-                    </div>
+    @php
+        $cancelRoute = Auth::user()->role === 'admin' 
+            ? route('admin.postmanagement') 
+            : route('dashboard');
+    @endphp
+    
+    <a href="{{ $cancelRoute }}" class="text-sm text-gray-600 hover:text-gray-900 transition underline">
+        {{ __('Cancel') }}
+    </a>
+
+    <x-primary-button class="ms-4">
+        {{ __('Update Report') }}
+    </x-primary-button>
+</div>
                 </form>
             </div>
         </div>

@@ -1,37 +1,44 @@
 <?php
 
 namespace App\Http\Controllers;
-
-use App\Models\Item; // Ensure you have an Item model
+use App\Models\Item; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class ItemReportController extends Controller
 {
-public function lost()
+use AuthorizesRequests;
+public function lost(Request $request) // Added Request here
 {
-    // We removed 'user_id' to show all items
-    // We added 'with('user')' to efficiently load the owner's information
     $items = Item::with('user')
-                 ->where('type', 'lost')
-                 ->latest()
-                 ->get();
+                ->where('type', 'lost')
+                // Add this filter: only filter if user_id is present in the URL
+                ->when($request->query('user_id'), function ($query, $userId) {
+                    return $query->where('user_id', $userId);
+                })
+                ->latest()
+                ->get();
 
     return view('report.lostitem', compact('items'));
 }
-   public function found()
+
+public function found(Request $request) // Added Request here
 {
-    // 1. Remove the user_id filter to show items from ALL users
-    // 2. Add 'with('user')' to load the reporter's name efficiently
     $items = \App\Models\Item::with('user') 
-                 ->where('type', 'found')
-                 ->latest()
-                 ->get();
+                ->where('type', 'found')
+                // Add this filter: only filter if user_id is present in the URL
+                ->when($request->query('user_id'), function ($query, $userId) {
+                    return $query->where('user_id', $userId);
+                })
+                ->latest()
+                ->get();
 
     return view('report.founditem', compact('items'));
 }
 
-    public function index()
+public function index()
 {
     // This returns the view where the user fills out the name, location, picture, etc.
     return view('report.index'); 
@@ -81,48 +88,48 @@ public function show($id)
     return view('report.show', compact('item'));
 }
 
-public function edit($id)
+public function edit(Item $item)
 {
-    $item = \App\Models\Item::findOrFail($id);
-
-    // Prevent someone from manually typing the URL to edit another person's item
-    if ($item->user_id !== auth()->id()) {
-        abort(403, 'You are not authorized to edit this item.');
+    if (auth()->user()->id !== $item->user_id && auth()->user()->role !== 'admin') {
+        abort(403);
     }
 
     return view('report.edit', compact('item'));
 }
 
-public function update(Request $request, $id)
+public function update(Request $request, Item $item)
 {
-    $item = Item::findOrFail($id);
-
-    // Security check: only the owner can update
-    if ($item->user_id !== auth()->id()) {
+    if (auth()->user()->id !== $item->user_id && auth()->user()->role !== 'admin') {
         abort(403);
     }
 
     $request->validate([
         'item_name' => 'required|string|max:255',
         'description' => 'required|string',
-        'type' => 'required|in:lost,found',
-        'location' => 'required|string',
+        'type' => 'required|string|max:255',
+        'location' => 'required|string|max:255',
         'reported_date' => 'required|date',
-        'image' => 'nullable|image|max:2048',
     ]);
 
-    $data = $request->only(['item_name', 'description', 'type', 'location', 'reported_date']);
+    $item->update([
+        'item_name' => $request->item_name,
+        'description' => $request->description,
+        'type' => $request->type,
+        'location' => $request->location,
+        'reported_date' => $request->reported_date,
+    ]);
 
-    // Handle new image upload
-    if ($request->hasFile('image')) {
-        // Optional: delete old image from storage here
-        $data['image'] = $request->file('image')->store('items', 'public');
+    // Redirect dynamically based on type
+    if (auth()->user()->role === 'admin') {
+        $url = route('admin.postmanagement');
+    } else {
+        // Check item type
+        $url = $item->type === 'lost' 
+               ? route('report.lostitem') 
+               : route('report.founditem');
     }
 
-    $item->update($data);
-
-    $route = $item->type === 'found' ? 'report.founditem' : 'report.lostitem';
-    return redirect()->route($route)->with('success', 'Report updated successfully!');
+    return redirect($url)->with('success', 'Report updated successfully!');
 }
 
 // Display a single found item
@@ -135,14 +142,30 @@ public function foundView($id)
 // Show the edit form for a found item
 public function foundEdit($id)
 {
+    // Find the item first
     $item = \App\Models\Item::findOrFail($id);
 
-    // Security: Only the owner can edit
-    if ($item->user_id !== auth()->id()) {
+    // Allow admin or owner
+    if (auth()->user()->role !== 'admin' && auth()->id() !== $item->user_id) {
         abort(403, 'Unauthorized action.');
     }
 
-    return view('report.foundedit', compact('item')); // You will create this blade
+    // Return the view with the item
+    return view('report.foundedit', compact('item'));
+}
+
+public function allPosts(Request $request)
+{
+    $query = \App\Models\Item::with('user');
+
+    // If an Admin clicked "Posts" from the User Management table
+    if ($request->has('user_id')) {
+        $query->where('user_id', $request->user_id);
+    }
+
+    $items = $query->latest()->paginate(15);
+
+    return view('admin.postmanagement', compact('items'));
 }
 
 }

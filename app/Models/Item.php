@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Item extends Model
 {
+    // Add this line to force the model to use the "items" table
+    protected $table = 'items';
+
     protected $fillable = [
-    'user_id', 
-    'item_name', 
-    'description', 
-    'type', 
-    'location', 
-    'reported_date', 
-    'status', 
-    'image'
-];
+        'item_name', 
+        'description', 
+        'location', 
+        'reported_date', 
+        'type', 
+        'image', 
+        'user_id'
+    ];
 
 public function user()
 {

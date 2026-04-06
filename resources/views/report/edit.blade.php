@@ -20,8 +20,8 @@
 
             <div class="bg-white p-6 shadow-sm sm:rounded-lg">
                 <form action="{{ route('report.update', $item->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
+    @csrf
+    @method('PUT')
 
                     <div class="mb-4">
                         <x-input-label for="item_name" :value="__('Item Name')" />

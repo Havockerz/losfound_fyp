@@ -12,11 +12,18 @@
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h3 class="text-lg font-medium text-gray-900">{{ __('Found Items List') }}</h3>
                     
-                    <a href="{{ route('report.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
+                    <a href="{{ route('report.index') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-black rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
                         {{ __('Report A Found Item') }}
                     </a>
                 </div>
-
+@if(request()->has('user_id'))
+    <div class="mb-4 p-4 bg-blue-50 border-l-4 border-blue-400 text-blue-700">
+        <p class="text-sm font-bold">
+            Showing reports for User #{{ request('user_id') }}
+            <a href="{{ url()->current() }}" class="ml-4 underline text-xs">Show all users</a>
+        </p>
+    </div>
+@endif
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
                     <table class="w-full text-sm text-left text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50">
@@ -57,11 +64,11 @@
                         View
                     </a>
 
-                    @if(auth()->id() === $item->user_id)
-                        <a href="{{ route('report.foundedit', $item->id) }}" 
-                           class="inline-flex items-center px-3 py-1 border border-amber-500 text-amber-600 rounded-md text-xs font-bold uppercase hover:bg-amber-500 hover:text-white transition duration-200">
+                    @if(auth()->user()->role === 'admin' || auth()->id() === $item->user_id)
+                    <a href="{{ route('report.edit', $item->id) }}" 
+                    class="inline-flex items-center px-3 py-1 border border-amber-500 text-amber-600 rounded-md text-xs font-bold uppercase hover:bg-amber-500 hover:text-white transition duration-200">
                             Edit
-                        </a>
+                            </a>
                     @endif
                 </div>
             </td>
