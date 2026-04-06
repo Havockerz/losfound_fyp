@@ -34,6 +34,23 @@
                     </div>
 
                     <div class="mb-4">
+                        <x-input-label for="item_type" :value="__('Item Type')" />
+                        <select name="item_type" id="item_type" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="">Choose item type</option>    
+                            <option value="electronics">Electronics</option>
+                            <option value="documents">Documents</option>
+                            <option value="wallet">Wallet</option>
+                            <option value="card">Cards (ID, Bank, Student)</option>
+                            <option value="keys">Keys</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="bag">Bag / Backpack</option>
+                            <option value="accessories">Accessories (Watch, Jewelry)</option>
+                            <option value="stationery">Stationery</option>
+                            <option value="others">Others</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
                         <x-input-label for="description" :value="__('Description')" />
                         <textarea name="description" id="description" rows="3" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" required></textarea>
                     </div>

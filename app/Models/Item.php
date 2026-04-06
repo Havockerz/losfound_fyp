@@ -14,7 +14,8 @@ class Item extends Model
         'description', 
         'location', 
         'reported_date', 
-        'type', 
+        'type',
+        'item_type', 
         'image', 
         'user_id'
     ];

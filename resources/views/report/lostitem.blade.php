@@ -45,6 +45,7 @@
                                 <th class="px-6 py-3">Picture</th>
                                 <th class="px-6 py-3">Item Name</th>
                                 <th class="px-6 py-3">Description</th>
+                                <th class="px-6 py-3">Item Type</th>
                                 <th class="px-6 py-3">Location</th>
                                 <th class="px-6 py-3">Date Reported</th>
                                 <th class="px-6 py-3">Status</th>
@@ -63,6 +64,7 @@
                                     </td>
                                     <td class="px-6 py-4 font-bold text-gray-900">{{ $item->item_name }}</td>
                                     <td class="px-6 py-4 text-xs">{{ Str::limit($item->description, 40) }}</td>
+                                    <td class="px-6 py-4 font-bold text-gray-900">{{ $item->item_type }}</td>
                                     <td class="px-6 py-4">{{ $item->location }}</td>
                                     <td class="px-6 py-4 text-nowrap">{{ \Carbon\Carbon::parse($item->reported_date)->format('d M Y') }}</td>
                                     <td class="px-6 py-4">

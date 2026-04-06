@@ -49,7 +49,8 @@ public function store(Request $request)
     $request->validate([
         'item_name'     => 'required|string|max:255',
         'description'   => 'required|string',
-        'type'          => 'required|in:lost,found', // Validate the type!
+        'type'          => 'required|in:lost,found',
+        'item_type'     => 'required|string|max:255', 
         'location'      => 'required|string',
         'reported_date' => 'required|date',
         'image'         => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
@@ -66,6 +67,7 @@ public function store(Request $request)
         'item_name'     => $request->item_name,
         'description'   => $request->description,
         'type'          => $request->type, // This pulls 'lost' or 'found' from the dropdown
+        'item_type'     => $request->item_type,
         'location'      => $request->location,
         'reported_date' => $request->reported_date,
         'image'         => $path,
@@ -107,6 +109,7 @@ public function update(Request $request, Item $item)
         'item_name' => 'required|string|max:255',
         'description' => 'required|string',
         'type' => 'required|string|max:255',
+        'item_type' => 'required|string|max:255',
         'location' => 'required|string|max:255',
         'reported_date' => 'required|date',
     ]);
@@ -115,6 +118,7 @@ public function update(Request $request, Item $item)
         'item_name' => $request->item_name,
         'description' => $request->description,
         'type' => $request->type,
+        'item_type' => $request->item_type,
         'location' => $request->location,
         'reported_date' => $request->reported_date,
     ]);
