@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function () {
     // Found Items Specific View/Edit
     Route::get('/found-items/{item}/view', [ItemReportController::class, 'foundView'])->name('report.foundview');
     Route::get('/found-items/{item}/edit', [ItemReportController::class, 'foundEdit'])->name('report.foundedit');
+    Route::delete('/report/{item}', [ItemReportController::class, 'destroy'])->name('report.destroy');
 
     // User Profile Dashboard
     Route::get('/profile-dashboard', [ProfileUserController::class, 'index'])->name('profile.index');

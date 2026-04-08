@@ -36,17 +36,18 @@
                     <div class="mb-4">
                         <x-input-label for="item_type" :value="__('Item Type')" />
                         <select name="item_type" id="item_type" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
-                            <option value="">Choose item type</option>    
-                            <option value="electronics">Electronics</option>
-                            <option value="documents">Documents</option>
-                            <option value="wallet">Wallet</option>
-                            <option value="card">Cards (ID, Bank, Student)</option>
-                            <option value="keys">Keys</option>
-                            <option value="clothing">Clothing</option>
-                            <option value="bag">Bag / Backpack</option>
-                            <option value="accessories">Accessories (Watch, Jewelry)</option>
-                            <option value="stationery">Stationery</option>
-                            <option value="others">Others</option>
+                            <option value="" disabled selected>Choose item type</option>
+
+                            <option value="Electronics">Electronics (Phone, SmartWatch, Laptop, Tablet, Earbuds)</option>
+                            <option value="Documents">Documents (Passport, License)</option>
+                            <option value="Wallet / Purse / Handbag">Wallet / Purse / Handbag</option>
+                            <option value="Card">Cards (IC, Bank, Student)</option>
+                            <option value="Keys">Keys</option>
+                            <option value="Clothing">Clothing (Footwear, Jacket, Headwear, Scarves)</option>
+                            <option value="Bag">Bag / Backpack</option>
+                            <option value="Accessories">Accessories (Watch, Jewelry, Eyewear, Rings, Bracelets)</option>
+                            <option value="Stationery">Stationery (Pen, Pencil, Notebooks)</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
 

@@ -36,6 +36,43 @@
                         </select>
                     </div>
 
+                                        <div class="mb-4">
+                        <x-input-label for="item_type" :value="__('Item Type')" />
+                        <select name="item_type" id="item_type" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm">
+                            <option value="" disabled selected>Choose item type</option>
+
+                            <option value="Electronics" {{ $item->item_type == 'Electronics' ? 'selected' : ''
+                            }}>Electronics (Phone, SmartWatch, Laptop, Tablet, Earbuds)</option>
+
+                            <option value="Documents" {{ $item->item_type == 'Documents' ? 'selected' : '' 
+                            }}>Documents (Passport, License)</option>
+                            
+                            <option value="Wallet / Purse / Handbag" {{ $item->item_type == 'Wallet / Purse / Handbag' ? 'selected' : '' 
+                            }}>Wallet / Purse / Handbag</option>
+
+                            <option value="Card" {{ $item->item_type == 'Card' ? 'selected' : '' 
+                            }}>Cards (IC, Bank, Student)</option>
+
+                            <option value="Keys" {{ $item->item_type == 'Keys' ? 'selected' : '' 
+                            }}>Keys</option>
+
+                            <option value="Clothing" {{ $item->item_type == 'Clothing' ? 'selected' : '' 
+                            }}>Clothing (Footwear, Jacket, Headwear, Scarves)</option>
+                            
+                            <option value="Bag" {{ $item->item_type == 'Bag' ? 'selected' : '' 
+                            }}>Bag / Backpack / Luggage</option>
+
+                            <option value="Accessories" {{ $item->item_type == 'Accessories' ? 'selected' : '' 
+                            }}>Accessories (Watch, Jewelry, Eyewear, Rings, Bracelets)</option>
+                                
+                            <option value="Stationery" {{ $item->item_type == 'Stationery' ? 'selected' : '' 
+                            }}>Stationery (Pen, Pencil, Notebooks)</option>
+                           
+                            <option value="Others" {{ $item->item_type == 'Others' ? 'selected' : '' 
+                            }}>Others</option>
+                        </select>
+                    </div>
+
                     <div class="mb-4">
                         <x-input-label for="description" :value="__('Description')" />
                         <textarea name="description" id="description" rows="3" class="block mt-1 w-full border-gray-300 rounded-md shadow-sm" required>{{ old('description', $item->description) }}</textarea>
