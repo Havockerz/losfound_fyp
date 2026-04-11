@@ -34,6 +34,19 @@ Route::middleware('auth')->group(function () {
     Route::get('/found-items/{item}/view', [ItemReportController::class, 'foundView'])->name('report.foundview');
     Route::get('/found-items/{item}/edit', [ItemReportController::class, 'foundEdit'])->name('report.foundedit');
     Route::delete('/report/{item}', [ItemReportController::class, 'destroy'])->name('report.destroy');
+    
+    // Route to show the claim form/page 
+    Route::get('/items/{item}/claim', [ItemReportController::class, 'claim'])->name('items.claim')->middleware(['auth']); 
+     
+ 
+    // Route to handle the form submission 
+    Route::post('/items/{item}/claim', [ItemReportController::class, 'storeClaim'])->name('items.claim.store')->middleware(['auth']);
+
+    // The page to show the form 
+    Route::get('/item/{item}/found', [ItemReportController::class, 'founditem'])->name('item.found')->middleware(['auth']);
+    
+    // The action to save the form 
+    Route::post('/item/{item}/found', [ItemReportController::class, 'storeFoundItem'])->name('item.found.store')->middleware(['auth']);
 
     // User Profile Dashboard
     Route::get('/profile-dashboard', [ProfileUserController::class, 'index'])->name('profile.index');

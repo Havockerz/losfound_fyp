@@ -75,27 +75,50 @@
                         Contact Information
                     </h3>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                        <div>
-                            <label class="block text-blue-700 font-bold uppercase text-[10px]">Reported By</label>
-                            <p class="text-gray-900 text-base">{{ $item->user->name }}</p>
-                        </div>
-                        <div>
-                            <label class="block text-blue-700 font-bold uppercase text-[10px]">Email Address</label>
-                            <p class="text-gray-900 text-base">{{ $item->user->email }}</p>
-                        </div>
-                        <div>
-                            <label class="block text-blue-700 font-bold uppercase text-[10px]">Phone Number</label>
-                            <p class="text-gray-900 text-base">{{ $item->user->phone ?? 'Not Provided' }}</p>
-                        </div>
-                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm"> 
+                <div> 
+                    <label class="block text-blue-700 font-bold uppercase text-[14px]">Reported By</label> 
+                    <p class="text-gray-900 text-base">{{ $item->user->name }}</p> 
+                </div> 
+                <div> 
+                    <label class="block text-blue-700 font-bold uppercase text-[14px]">Email Address</label> 
+                    <p class="text-gray-900 text-base"> 
+                        {{ \Illuminate\Support\Str::mask($item->user->email, '#', 3, 3) }} 
+                    </p> 
+                </div> 
+                <div> 
+                    <label class="block text-blue-700 font-bold uppercase text-[14px]">Phone Number</label> 
+                    <p class="text-gray-900 text-base"> 
+                        @if($item->user->phone) 
+                            {{ \Illuminate\Support\Str::mask($item->user->phone, '#', 3, 4) }} 
+                        @else 
+                            Not Provided 
+                        @endif 
+                    </p> 
+                </div> 
+            </div> 
                 </div>
 
-                <div class="mt-8 flex justify-end">
-                    <a href="javascript:history.back()"
-                        class="text-gray-600 hover:text-gray-900 font-medium transition">
+                <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 border-t pt-6">
+                    <a href="javascript:history.back()" class="text-gray-600 hover:text-gray-900 font-medium 
+                transition order-2 sm:order-1">
                         &larr; Back to List
                     </a>
+
+                    {{-- Only show if the item is currently pending --}}
+                    @if($item->status === 'pending')
+                        <a href="{{ route('item.found', $item->id) }}" class="inline-flex items-center px-6 py-3 bg-green-600 border border-transparent 
+                        rounded-lg font-semibold text-white uppercase tracking-widest hover:bg-green-700 active:bg
+                        green-900 focus:outline-none focus:border-green-900 focus:ring ring-green-300 transition 
+                        ease-in-out duration-150 shadow-sm order-1 sm:order-2">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4
+                            4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            I've Found This Item
+                        </a>
+                    @endif
+                    </div>
                 </div>
 
             </div>

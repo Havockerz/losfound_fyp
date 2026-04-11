@@ -68,7 +68,7 @@
 
                                                                 <td class="px-6 py-4">
                                                                     <div class="flex items-center justify-center gap-3">
-                                                                        <a href="{{ route('report.show', $item->id) }}" class="inline-flex items-center px-3 py-1 
+                                                                        <a href="{{ route('report.foundview', $item->id) }}" class="inline-flex items-center px-3 py-1 
                                                                         border border-blue-500 
                                                                         text-blue-600 rounded-md text-xs font-bold uppercase 
                                                                         hover:bg-blue-600 hover:text-white transition duration-200">View

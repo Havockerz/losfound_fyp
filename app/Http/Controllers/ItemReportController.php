@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Claim;
+use App\Models\FoundReport; 
 
 class ItemReportController extends Controller
 {
@@ -197,7 +199,89 @@ class ItemReportController extends Controller
         // 3. Delete the record from the database 
         $item->delete();
         // 4. Redirect back with a success message 
-        return back()->with('success', 'Report deleted successfully!'); 
-} 
+        return back()->with('success', 'Report deleted successfully!');
+    }
+
+    public function claim(Item $item)
+    {
+
+        // Prevent claiming if already returned 
+        if ($item->status === 'returned') {
+            return redirect()->back()->with('error', 'This item has already been returned.');
+        }
+        return view('item.claim', compact('item'));
+    }
+    public function storeClaim(Request $request, Item $item) 
+    {
+        // 1. Validate the input - CORRECTED
+        $validated = $request->validate([
+            'verification_answer' => 'required|string|max:255',
+            'description' => 'required|string',  // ✅ Added proper syntax
+            'proof_image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',  // ✅ Fixed
+        ]);
+
+        // 2. Handle file upload if present
+        $imagePath = null;
+        if ($request->hasFile('proof_image')) {
+            $imagePath = $request->file('proof_image')->store('claims', 'public');
+        }
+
+        // 3. Create the claim record
+        Claim::create([
+            'item_id'             => $item->id,
+            'user_id'             => Auth::id(),
+            'verification_answer' => $validated['verification_answer'],
+            'description'         => $validated['description'],
+            'proof_image'         => $imagePath,
+            'status'              => 'pending',
+        ]);
+
+        // 4. Redirect with success message
+        return redirect()->route('dashboard')
+                        ->with('success', 'Your claim has been submitted and is awaiting admin review.');
+    }
+
+        public function founditem(Item $item) 
+    { 
+        // Basic security - check if item is still pending/lost
+        if ($item->status !== 'pending') { 
+            return redirect()->back()->with('error', 'This item is no longer marked as lost.'); 
+        } 
+        
+        // Return the view for reporting found item
+        return view('item.found', compact('item')); 
+    }
+    
+    /**
+     * Store the found item report
+     */
+    public function storeFoundItem(Request $request, Item $item) 
+    { 
+        // Validate the request data
+        $validated = $request->validate([ 
+            'location_found' => 'required|string|max:255', 
+            'finding_details' => 'required|string', 
+            'finder_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
+        ]); 
+        
+        // Handle file upload if present
+        $path = null; 
+        if ($request->hasFile('finder_photo')) { 
+            $path = $request->file('finder_photo')->store('found_reports', 'public'); 
+        } 
+        
+        // Create the found report record
+        FoundReport::create([ 
+            'item_id' => $item->id, 
+            'user_id' => auth()->id(), 
+            'location_found' => $validated['location_found'], 
+            'details' => $validated['finding_details'], 
+            'image' => $path, 
+            'status' => 'pending', 
+        ]); 
+        
+        // Redirect to dashboard with success message
+        return redirect()->route('dashboard')->with('success', 'Your report has been submitted. The admin will review it shortly!'); 
+    }
 
 }
