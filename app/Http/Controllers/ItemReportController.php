@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Claim;
-use App\Models\FoundReport; 
+use App\Models\FoundReport;
 
 class ItemReportController extends Controller
 {
@@ -52,37 +52,35 @@ class ItemReportController extends Controller
         $request->validate([
             'item_name' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|in:lost,found',
+
             'item_type' => 'required|string|max:255',
+            'hidden_details' => 'required|string',
             'location' => 'required|string',
             'reported_date' => 'required|date',
             'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
         $path = null;
         if ($request->hasFile('image')) {
             $path = $request->file('image')->store('items', 'public');
         }
-
-        // Save the item using the type from the form
+        // Save the item using the type from the form 
         $item = \App\Models\Item::create([
-            'user_id' => auth()->id(),
+            'user_id'
+            => auth()->id(),
             'item_name' => $request->item_name,
             'description' => $request->description,
-            'type' => $request->type, // This pulls 'lost' or 'found' from the dropdown
+            'type' => 'lost',
             'item_type' => $request->item_type,
-            'location' => $request->location,
+            'hidden_details' => $request->hidden_details,
+            'location'
+            => $request->location,
             'reported_date' => $request->reported_date,
-            'image' => $path,
-            'status' => 'pending',
+            'image'
+            => $path,
+            'status'
+            => 'pending',
         ]);
-
-        // Redirect based on the type reported
-        if ($request->type === 'found') {
-            return redirect()->route('report.founditem')->with('success', 'Found item reported successfully!');
-        }
-
-        return redirect()->route('report.lostitem')->with('success', 'Lost item reported successfully!');
+        return redirect()->route('dashboard')->with('success', 'Lost item reported successfully!');
     }
 
     public function show($id)
@@ -112,7 +110,7 @@ class ItemReportController extends Controller
         $request->validate([
             'item_name' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|string|max:255',
+            'hidden_details' => 'required|string',
             'item_type' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'reported_date' => 'required|date',
@@ -122,7 +120,7 @@ class ItemReportController extends Controller
         $data = [
             'item_name' => $request->item_name,
             'description' => $request->description,
-            'type' => $request->type,
+            'hidden_details' => $request->hidden_details,
             'item_type' => $request->item_type,
             'location' => $request->location,
             'reported_date' => $request->reported_date,
@@ -211,7 +209,7 @@ class ItemReportController extends Controller
         }
         return view('item.claim', compact('item'));
     }
-    public function storeClaim(Request $request, Item $item) 
+    public function storeClaim(Request $request, Item $item)
     {
         // 1. Validate the input - CORRECTED
         $validated = $request->validate([
@@ -228,60 +226,92 @@ class ItemReportController extends Controller
 
         // 3. Create the claim record
         Claim::create([
-            'item_id'             => $item->id,
-            'user_id'             => Auth::id(),
+            'item_id' => $item->id,
+            'user_id' => Auth::id(),
             'verification_answer' => $validated['verification_answer'],
-            'description'         => $validated['description'],
-            'proof_image'         => $imagePath,
-            'status'              => 'pending',
+            'description' => $validated['description'],
+            'proof_image' => $imagePath,
+            'status' => 'pending',
         ]);
 
         // 4. Redirect with success message
         return redirect()->route('dashboard')
-                        ->with('success', 'Your claim has been submitted and is awaiting admin review.');
+            ->with('success', 'Your claim has been submitted and is awaiting admin review.');
     }
 
-        public function founditem(Item $item) 
-    { 
+    public function founditem(Item $item)
+    {
         // Basic security - check if item is still pending/lost
-        if ($item->status !== 'pending') { 
-            return redirect()->back()->with('error', 'This item is no longer marked as lost.'); 
-        } 
-        
+        if ($item->status !== 'pending') {
+            return redirect()->back()->with('error', 'This item is no longer marked as lost.');
+        }
+
         // Return the view for reporting found item
-        return view('item.found', compact('item')); 
+        return view('item.found', compact('item'));
     }
-    
+
     /**
      * Store the found item report
      */
-    public function storeFoundItem(Request $request, Item $item) 
-    { 
+    public function storeFoundItem(Request $request, Item $item)
+    {
         // Validate the request data
-        $validated = $request->validate([ 
-            'location_found' => 'required|string|max:255', 
-            'finding_details' => 'required|string', 
-            'finder_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048', 
-        ]); 
-        
+        $validated = $request->validate([
+            'location_found' => 'required|string|max:255',
+            'finding_details' => 'required|string',
+            'finder_photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
         // Handle file upload if present
-        $path = null; 
-        if ($request->hasFile('finder_photo')) { 
-            $path = $request->file('finder_photo')->store('found_reports', 'public'); 
-        } 
-        
+        $path = null;
+        if ($request->hasFile('finder_photo')) {
+            $path = $request->file('finder_photo')->store('found_reports', 'public');
+        }
+
         // Create the found report record
-        FoundReport::create([ 
-            'item_id' => $item->id, 
-            'user_id' => auth()->id(), 
-            'location_found' => $validated['location_found'], 
-            'details' => $validated['finding_details'], 
-            'image' => $path, 
-            'status' => 'pending', 
-        ]); 
-        
+        FoundReport::create([
+            'item_id' => $item->id,
+            'user_id' => auth()->id(),
+            'location_found' => $validated['location_found'],
+            'details' => $validated['finding_details'],
+            'image' => $path,
+            'status' => 'pending',
+        ]);
+
         // Redirect to dashboard with success message
-        return redirect()->route('dashboard')->with('success', 'Your report has been submitted. The admin will review it shortly!'); 
+        return redirect()->route('dashboard')->with('success', 'Your report has been submitted. The admin will review it shortly!');
+    }
+
+    public function foundIndex()
+    {
+        return view('report.foundindex');
+    }
+
+    public function storeFound(Request $request)
+    {
+        $validated = $request->validate([
+            'item_name' => 'required|string|max:255',
+            'item_type' => 'required|string',
+            'description' => 'required|string',
+            'location' => 'required|string',
+            'reported_date' => 'required|date',
+            'hidden_details' => 'required|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+        $path = $request->file('image') ? $request->file('image')->store('items', 'public') : null;
+        \App\Models\Item::create([
+            'user_id' => auth()->id(),
+            'item_name' => $request->item_name,
+            'type' => 'found',
+            'status' => 'pending',
+            'item_type' => $request->item_type,
+            'description' => $request->description,
+            'location' => $request->location,
+            'reported_date' => $request->reported_date,
+            'hidden_details' => $request->hidden_details,
+            'image' => $path,
+        ]);
+        return redirect()->route('dashboard')->with('success', 'Found item reported successfully!');
     }
 
 }

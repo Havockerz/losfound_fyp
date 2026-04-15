@@ -34,11 +34,10 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
                     <h3 class="text-lg font-medium text-gray-900">{{ __('Lost Item List') }}</h3>
-                    <a href="{{ route('report.index') }}"
-                        class="inline-flex items-center px-4 py-2 bg-blue-600 border border-black rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 transition shadow-sm">
-
-                        {{ __('Report A Lost Item') }}
-                    </a>
+                <a href="{{ route('report.index') }}"
+                    class="inline-flex items-center px-4 py-2 bg-red-300 border border-black rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:bg-red-400 hover:shadow-md focus:bg-red-400 active:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-sm">
+                    {{ __('Report A Lost Item') }}
+                </a>
                 </div>
 
                 <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -83,31 +82,35 @@
                                     </td>
 
                                     <td class="px-6 py-4">
-                                                                    <div class="flex items-center justify-center gap-3">
-                                                                        <a href="{{ route('report.show', $item->id) }}" class="inline-flex items-center px-3 py-1 
-                                                                        border border-blue-500 
-                                                                        text-blue-600 rounded-md text-xs font-bold uppercase 
-                                                                        hover:bg-blue-600 hover:text-white transition duration-200">View
-                                                                        </a>
-                                                                        @if(auth()->user()->role === 'admin' || auth()->id() === $item->user_id)
-                                                                            <a href="{{ route('report.edit', $item->id) }}" class="inline-flex items-center px-3 py-1 
-                                                                            border border-amber-500 
-                                                                            text-amber-600 rounded-md text-xs font-bold uppercase 
-                                                                            hover:bg-amber-500 hover:text-white transition duration-200">Edit
-                                                                            </a>
-                                                                        
-                                                                        <form action="{{ route('report.destroy', $item->id) }}" method="POST"
-                                                                              onsubmit="return confirm('Are you sure you want to delete this report?');" class="inline">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                            <button type="submit" class="inline-flex items-center px-3 py-1 
-                                                                            border border-red-500 text-red-600 rounded-md text-xs font-bold uppercase 
-                                                                            hover:bg-red-500 hover:text-white transition duration-200">Delete
-                                                                            </button>
-                                                                        </form>
-                                                                        @endif
-                                                                    </div>
-                                                                </td>
+                                        <div class="flex items-center justify-center gap-3">
+                                            <a href="{{ route('report.show', $item->id) }}"
+                                                class="inline-flex items-center px-3 py-1 
+                                                                            border border-blue-500 
+                                                                            text-blue-600 rounded-md text-xs font-bold uppercase 
+                                                                            hover:bg-blue-600 hover:text-white transition duration-200">View
+                                            </a>
+                                            @if(auth()->user()->role === 'admin' || auth()->id() === $item->user_id)
+                                                <a href="{{ route('report.edit', $item->id) }}"
+                                                    class="inline-flex items-center px-3 py-1 
+                                                                                    border border-amber-500 
+                                                                                    text-amber-600 rounded-md text-xs font-bold uppercase 
+                                                                                    hover:bg-amber-500 hover:text-white transition duration-200">Edit
+                                                </a>
+
+                                                <form action="{{ route('report.destroy', $item->id) }}" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this report?');"
+                                                    class="inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="inline-flex items-center px-3 py-1 
+                                                                                    border border-red-500 text-red-600 rounded-md text-xs font-bold uppercase 
+                                                                                    hover:bg-red-500 hover:text-white transition duration-200">Delete
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>

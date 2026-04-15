@@ -77,6 +77,12 @@
                     </div>
 
                     <div class="mb-4">
+                        <x-input-label for="hidden_details" :value="__('Hidden Description')" />
+                        <textarea name="hidden_details" id="hidden_details" rows="3" class="block mt
+                    1 w-full border-gray-300 rounded-md shadow-sm" required>{{ old('hidden_details', $item->hidden_details) }}</textarea>
+                    </div>
+
+                    <div class="mb-4">
                         <x-input-label for="description" :value="__('Description')" />
                         <textarea name="description" id="description" rows="3"
                             class="block mt-1 w-full border-gray-300 rounded-md shadow-sm"

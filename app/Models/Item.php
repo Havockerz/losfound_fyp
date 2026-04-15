@@ -10,17 +10,18 @@ class Item extends Model
     protected $table = 'items';
 
     protected $fillable = [
-        'item_name', 
-        'description', 
-        'location', 
-        'reported_date', 
+        'item_name',
+        'description',
+        'location',
+        'reported_date',
+        'hidden_details',
         'type',
-        'item_type', 
-        'image', 
+        'item_type',
+        'image',
         'user_id'
     ];
 
-public function user()
+    public function user()
 {
     return $this->belongsTo(\App\Models\User::class);
 }

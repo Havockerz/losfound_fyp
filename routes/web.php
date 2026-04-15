@@ -23,7 +23,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/lost', [ItemReportController::class, 'lost'])->name('lostitem');
         Route::get('/found', [ItemReportController::class, 'found'])->name('founditem');
         Route::post('/store', [ItemReportController::class, 'store'])->name('store');
-        
+        Route::get('/found-report', [ItemReportController::class, 'foundIndex'])->name('foundindex');
+        Route::post('/found-report/store', [ItemReportController::class, 'storeFound'])->name('foundstore');
+
         // Use {item} for scoped bindings instead of {id} to match standard Controller methods
         Route::get('/{item}', [ItemReportController::class, 'show'])->name('show');
         Route::get('/{item}/edit', [ItemReportController::class, 'edit'])->name('edit');
