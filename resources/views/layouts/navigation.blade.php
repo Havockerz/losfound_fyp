@@ -42,6 +42,12 @@
             {{ __('Post Management') }}
         </x-nav-link>
     </div>
+
+    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"> 
+        <x-nav-link :href="route('admin.requests')" :active="request()->routeIs('admin.requests')"> 
+            {{ __('Requests') }} 
+        </x-nav-link> 
+    </div>
 @endif
 
             <!-- Settings Dropdown -->

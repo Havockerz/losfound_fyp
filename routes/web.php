@@ -5,14 +5,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ItemReportController;
 use App\Http\Controllers\ProfileUserController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index']) ->middleware(['auth', 'verified']) ->name('dashboard');
 
 // --- AUTHENTICATED USER ROUTES ---
 Route::middleware('auth')->group(function () {
@@ -60,6 +59,13 @@ Route::middleware('auth')->group(function () {
 // --- ADMIN ONLY ROUTES ---
     Route::middleware(['auth', 'is_admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+    Route::get('/requests', [AdminController::class, 'manageRequests'])->name('requests'); 
+    Route::patch('/claims/{id}/approve', [AdminController::class, 'approveClaim'])->name('claims.approve'); 
+    Route::patch('/claims/{id}/reject', [AdminController::class, 'rejectClaim'])->name('claims.reject');
+
+    // New Found Report Routes 
+    Route::patch('/found-reports/{id}/approve', [AdminController::class, 'approveFound'])->name('found.approve'); 
+    Route::patch('/found-reports/{id}/reject', [AdminController::class, 'rejectFound'])->name('found.reject');
     
     // User Management
     Route::get('/users', [AdminController::class, 'userManagement'])->name('usermanagement');

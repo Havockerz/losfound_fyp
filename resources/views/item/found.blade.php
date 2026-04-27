@@ -24,9 +24,7 @@ block w-full" placeholder="e.g. Under the bench at the main library cafe" requir
                     <div>
                         <x-input-label for="finding_details" value="2. Additional Details" />
                         <textarea id="finding_details" name="finding_details" rows="4" class="mt-1 block w-full border-gray-300 focus:border-green-500 focus:ring
-green-500 rounded-md shadow-sm" placeholder="Describe the condition of the item or any circumstances of the 
-f
-ind..." required></textarea>
+green-500 rounded-md shadow-sm" placeholder="Describe the condition of the item or any circumstances of the find..." required></textarea>
                         <x-input-error class="mt-2" :messages="$errors->get('finding_details')" />
                     </div>
                     <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
