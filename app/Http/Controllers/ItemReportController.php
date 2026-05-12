@@ -314,4 +314,13 @@ class ItemReportController extends Controller
         return redirect()->route('dashboard')->with('success', 'Found item reported successfully!');
     }
 
+    public function userItems()
+    {
+
+        // Get the items reported by the currently authenticated user 
+        // We use latest() to show the most recent reports first 
+        $items = Item::where('user_id', Auth::id())->latest()->get();
+        return view('item.my_item', compact('items'));
+    }
+
 }

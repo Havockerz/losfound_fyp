@@ -1,132 +1,113 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-<div class="shrink-0 flex items-center">
-    <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center">
-        <span class="text-2xl font-bold tracking-tight text-gray-800 hover:text-indigo-600 transition duration-150 ease-in-out">
-            Los<span class="text-red    -600">Found</span>
-        </span>
-    </a>
-</div>
-                <!-- Navigation Links Home -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Home') }}
-                    </x-nav-link>
-                </div>
+<nav class="bg-white/10 backdrop-blur-xl border-b border-white/20 relative z-[1000]">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between text-white">
 
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-    <x-nav-link :href="route('report.lostitem')" :active="request()->routeIs('report.lostitem')">
-        {{ __('Lost Item') }}
-    </x-nav-link>
-</div>
+        <!-- LEFT SIDE -->
+        <div class="flex items-center gap-10">
 
-<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-    <x-nav-link :href="route('report.founditem')" :active="request()->routeIs('report.founditem')">
-        {{ __('Found Item') }}
-    </x-nav-link>
-</div>
+            <!-- LOGO -->
+            <a href="{{ Auth::user()->role === 'admin' ? route('admin.dashboard') : route('dashboard') }}"
+                class="text-2xl font-bold tracking-tight">
+                Los<span class="text-pink-400">Found</span>
+            </a>
 
-@if(auth()->user()->role === 'admin')
-    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-        <x-nav-link :href="route('admin.usermanagement')" :active="request()->routeIs('admin.usermanagement')">
-            {{ __('User Management') }}
-        </x-nav-link>
-    </div>
+            <!-- NAV LINKS -->
+            <div class="hidden md:flex items-center gap-6 text-sm">
 
-    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-        <x-nav-link :href="route('admin.postmanagement')" :active="request()->routeIs('admin.postmanagement')">
-            {{ __('Post Management') }}
-        </x-nav-link>
-    </div>
+                <a href="{{ route('dashboard') }}"
+                    class="no-underline {{ request()->routeIs('dashboard') ? 'font-semibold text-white' : 'text-white/70 hover:text-white' }}">
+                    Home
+                </a>
 
-    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"> 
-        <x-nav-link :href="route('admin.requests')" :active="request()->routeIs('admin.requests')"> 
-            {{ __('Requests') }} 
-        </x-nav-link> 
-    </div>
-@endif
+                <a href="{{ route('report.lostitem') }}"
+                    class="no-underline {{ request()->routeIs('report.lostitem') ? 'font-semibold text-white' : 'text-white/70 hover:text-white' }}">
+                    Lost Item
+                </a>
 
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
+                <a href="{{ route('report.founditem') }}"
+                    class="no-underline {{ request()->routeIs('report.founditem') ? 'font-semibold text-white' : 'text-white/70 hover:text-white' }}">
+                    Found Item                    
+                </a>
 
-                            <div class="ms-1">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
+                <a href="{{ route('item.my_item') }}"
+                    class="no-underline {{ request()->routeIs('item.my_item') ? 'font-semibold text-white' : 'text-white/70 hover:text-white' }}">
+                    My Items                   
+                </a>
+                
+                <!-- <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"> 
+                <x-nav-link :href="route('item.my_item')" :active="request()->routeIs('item.my_item')"> 
+                {{ __('My Items') }} 
+                </x-nav-link> 
+                </div>                  -->
 
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.index')">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
+                @if(auth()->user()->role === 'admin')
+                    <a href="{{ route('admin.usermanagement') }}" class="text-white/70 hover:text-white">
+                        Users
+                    </a>
 
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                    <a href="{{ route('admin.postmanagement') }}" class="text-white/70 hover:text-white">
+                        Posts
+                    </a>
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
-            </div>
+                    <a href="{{ route('admin.requests') }}" class="text-white/70 hover:text-white">
+                        Requests
+                    </a>
+                @endif
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
             </div>
         </div>
-    </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-        </div>
+        <!-- RIGHT SIDE (DROPDOWN) -->
+        <div x-data="{ open: false }" class="relative">
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
-            </div>
+            <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 rounded-xl
+                bg-white/10 border border-white/20
+                hover:bg-white/20 transition">
 
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                {{ Auth::user()->name }}
 
-                <!-- Authentication -->
+                <svg class="w-4 h-4 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+
+            <!-- DROPDOWN -->
+            <div x-show="open" @click.outside="open = false" x-transition.origin.top.right class="absolute right-0 mt-3 w-44 
+    bg-white/10 backdrop-blur-2xl border border-white/20
+    rounded-xl shadow-xl z-[9999] overflow-hidden">
+
+                <!-- PROFILE -->
+                <a href="{{ route('profile.index') }}"
+                    class="block px-4 py-3 text-sm hover:bg-white/10 transition no-underline">
+                    Profile
+                </a>
+
+                <!-- DIVIDER -->
+                <div class="border-t border-white/20"></div>
+
+                <!-- CHANGE ACCOUNT -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <input type="hidden" name="change_account" value="1">
+
+                    <button type="submit" class="w-full text-left px-4 py-3 text-sm
+            hover:bg-yellow-500/20 transition text-yellow-300">
+                        Change Account
+                    </button>
+                </form>
+
+                <!-- LOGOUT -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
+                    <button type="submit" class="w-full text-left px-4 py-3 text-sm
+            hover:bg-red-500/20 transition text-red-300">
+                        Logout
+                    </button>
                 </form>
+
             </div>
         </div>
+
     </div>
+
 </nav>
